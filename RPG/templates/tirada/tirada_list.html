@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Tiradas de Dado - RPG Platform{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h1 class="mb-0">🎲 Tiradas de Dado</h1>
+    </div>
+    <div class="col-md-6 text-end">
+        <a href="{% url 'tirada:create' %}" class="btn btn-primary btn-lg">+ Nueva Tirada</a>
+    </div>
+</div>
+
+{% if tiradas %}
+<div class="table-responsive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuario</th>
+                <th>Tipo de Dado</th>
+                <th>Resultado</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tirada in tiradas %}
+            <tr>
+                <td class="fw-bold">#{{ tirada.id_tirada }}</td>
+                <td>{{ tirada.user_id.username }}</td>
+                <td>
+                    <span class="badge bg-info">{{ tirada.get_tipo_dado_display }}</span>
+                </td>
+                <td class="fw-bold">
+                    {% if tirada.tipo_dado == 'd4' %}
+                        {% if tirada.resultado == 4 %}<span class="text-success">{{ tirada.resultado }}</span>{% else %}{{ tirada.resultado }}{% endif %}
+                    {% elif tirada.tipo_dado == 'd6' %}
+                        {% if tirada.resultado == 6 %}<span class="text-success">{{ tirada.resultado }}</span>{% else %}{{ tirada.resultado }}{% endif %}
+                    {% elif tirada.tipo_dado == 'd20' %}
+                        {% if tirada.resultado == 20 %}<span class="text-success">{{ tirada.resultado }}</span>{% elif tirada.resultado == 1 %}<span class="text-danger">{{ tirada.resultado }}</span>{% else %}{{ tirada.resultado }}{% endif %}
+                    {% else %}
+                        {{ tirada.resultado }}
+                    {% endif %}
+                </td>
+                <td>{{ tirada.fecha|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <a href="{% url 'tirada:detail' tirada.id_tirada %}" class="btn btn-sm btn-info">Ver</a>
+                    <a href="{% url 'tirada:update' tirada.id_tirada %}" class="btn btn-sm btn-warning">Editar</a>
+                    <a href="{% url 'tirada:delete' tirada.id_tirada %}" class="btn btn-sm btn-danger">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if is_paginated %}
+<nav aria-label="Pagination">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page=1">Primera</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+        </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">{{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="alert alert-info text-center py-5">
+    <h4>No hay tiradas registradas</h4>
+    <p>Registra tu primera tirada haciendo clic en el botón de arriba.</p>
+</div>
+{% endif %}
+{% endblock %}

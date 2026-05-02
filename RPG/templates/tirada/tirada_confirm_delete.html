@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Tirada #{{ object.id_tirada }} - RPG Platform{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card border-danger">
+            <div class="card-header bg-danger">
+                <h4 class="mb-0">⚠️ Confirmar Eliminación</h4>
+            </div>
+            <div class="card-body">
+                <p class="mb-4">¿Estás seguro de que deseas eliminar la siguiente tirada?</p>
+
+                <div class="alert alert-dark">
+                    <p class="mb-1"><strong>ID:</strong> #{{ object.id_tirada }}</p>
+                    <p class="mb-1"><strong>Usuario:</strong> {{ object.user_id.username }}</p>
+                    <p class="mb-1"><strong>Tipo de Dado:</strong> {{ object.get_tipo_dado_display }}</p>
+                    <p class="mb-1"><strong>Resultado:</strong> {{ object.resultado }}</p>
+                    <p class="mb-0"><strong>Fecha:</strong> {{ object.fecha|date:"d/m/Y H:i" }}</p>
+                </div>
+
+                <p class="text-muted">
+                    <strong>⚠️ Esta acción no se puede deshacer.</strong>
+                </p>
+
+                <div class="d-flex gap-2">
+                    <form method="post" class="flex-grow-1">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger w-100">🗑️ Sí, Eliminar</button>
+                    </form>
+                    <a href="{% url 'tirada:detail' object.id_tirada %}" class="btn btn-secondary">← No, Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import TiradaDado
 from .forms import TiradaDadoForm
+import random
 
 
-class TiradaDadoListView(LoginRequiredMixin, ListView):
+class TiradaDadoListView(ListView):
     model = TiradaDado
     template_name = 'tirada/tirada_list.html'
     context_object_name = 'tiradas'
@@ -18,25 +18,47 @@ class TiradaDadoListView(LoginRequiredMixin, ListView):
         return TiradaDado.objects.select_related('user_id').order_by('-fecha')
 
 
-class TiradaDadoDetailView(LoginRequiredMixin, DetailView):
+class TiradaDadoDetailView(DetailView):
     model = TiradaDado
     template_name = 'tirada/tirada_detail.html'
     context_object_name = 'tirada'
     pk_url_kwarg = 'pk'
 
 
-class TiradaDadoCreateView(LoginRequiredMixin, CreateView):
+class TiradaDadoCreateView(CreateView):
     model = TiradaDado
     template_name = 'tirada/tirada_form.html'
     form_class = TiradaDadoForm
     success_url = reverse_lazy('tirada:list')
 
     def form_valid(self, form):
-        messages.success(self.request, '✓ Tirada registrada exitosamente')
+        # Calcular automáticamente el resultado basado en el tipo de dado
+        tipo_dado = form.cleaned_data['tipo_dado']
+        dados_rangos = {
+            'd4': 4,
+            'd6': 6,
+            'd8': 8,
+            'd10': 10,
+            'd12': 12,
+            'd20': 20,
+        }
+        resultado = random.randint(1, dados_rangos[tipo_dado])
+        form.instance.resultado = resultado
+        
+        # Asignar usuario: autenticado si existe, si no obtener el primero (admin)
+        if self.request.user.is_authenticated:
+            form.instance.user_id = self.request.user
+        else:
+            # Obtener el primer usuario (generalmente el admin)
+            user = User.objects.first()
+            if user:
+                form.instance.user_id = user
+        
+        messages.success(self.request, f'✓ Tirada registrada exitosamente: {tipo_dado} = {resultado}')
         return super().form_valid(form)
 
 
-class TiradaDadoUpdateView(LoginRequiredMixin, UpdateView):
+class TiradaDadoUpdateView(UpdateView):
     model = TiradaDado
     template_name = 'tirada/tirada_form.html'
     form_class = TiradaDadoForm
@@ -44,11 +66,33 @@ class TiradaDadoUpdateView(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('tirada:list')
 
     def form_valid(self, form):
-        messages.success(self.request, '✓ Tirada actualizada exitosamente')
+        # Recalcular automáticamente el resultado si cambió el tipo de dado
+        tipo_dado = form.cleaned_data['tipo_dado']
+        dados_rangos = {
+            'd4': 4,
+            'd6': 6,
+            'd8': 8,
+            'd10': 10,
+            'd12': 12,
+            'd20': 20,
+        }
+        resultado = random.randint(1, dados_rangos[tipo_dado])
+        form.instance.resultado = resultado
+        
+        # Asignar usuario: autenticado si existe, si no obtener el primero (admin)
+        if self.request.user.is_authenticated:
+            form.instance.user_id = self.request.user
+        else:
+            # Obtener el primer usuario (generalmente el admin)
+            user = User.objects.first()
+            if user:
+                form.instance.user_id = user
+        
+        messages.success(self.request, f'✓ Tirada actualizada exitosamente: {tipo_dado} = {resultado}')
         return super().form_valid(form)
 
 
-class TiradaDadoDeleteView(LoginRequiredMixin, DeleteView):
+class TiradaDadoDeleteView(DeleteView):
     model = TiradaDado
     template_name = 'tirada/tirada_confirm_delete.html'
     pk_url_kwarg = 'pk'

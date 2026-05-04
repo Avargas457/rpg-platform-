@@ -16,7 +16,7 @@ class TiradaDado(models.Model):
     tipo_dado = models.CharField(max_length=10, choices=TIPO_DADO_CHOICES)
     resultado = models.IntegerField()
     fecha = models.DateTimeField(auto_now_add=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id')
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, db_column='user_id', null=True, blank=True)
 
     class Meta:
         db_table = 'tirada_dado'

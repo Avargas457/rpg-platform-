@@ -98,6 +98,11 @@ class TiradaDadoDeleteView(DeleteView):
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('tirada:list')
 
+
+def reception_view(request):
+    """Vista de recepción/inicio"""
+    return render(request, 'reception.html')
+
     def delete(self, request, *args, **kwargs):
         messages.success(request, '✓ Tirada eliminada exitosamente')
         return super().delete(request, *args, **kwargs)

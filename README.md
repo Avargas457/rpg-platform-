@@ -36,7 +36,6 @@ tirada/                   # App de tirada de dados
 - **Host**: 127.0.0.1:3306
 - **BD**: rpg_platform
 - **Usuario**: root (sin contraseña)
-- **Tabla**: tirada_tiradadadο (id_tirada, tipo_dado, resultado, fecha, user_id)
 
 ## Funcionalidades - Tirada CRUD
 

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Combate #{{ object.id_combate }} - RPG Platform{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <div class="card border-danger">
+            <div class="card-header bg-danger">
+                <h4 class="mb-0">⚠️ Confirmar Eliminación</h4>
+            </div>
+            <div class="card-body">
+                <p class="mb-4">¿Estás seguro de que deseas eliminar el siguiente combate?</p>
+
+                <div class="alert alert-dark">
+                    <p class="mb-1"><strong>ID:</strong> #{{ object.id_combate }}</p>
+                    <p class="mb-1"><strong>Campaña:</strong> {{ object.id_campania.nombre }}</p>
+                    <p class="mb-1"><strong>Estado:</strong> {{ object.estado }}</p>
+                    <p class="mb-0"><strong>Fecha:</strong> {{ object.fecha_inicio|date:"d/m/Y H:i" }}</p>
+                </div>
+
+                <p class="text-muted">
+                    <strong>⚠️ Esta acción no se puede deshacer.</strong>
+                </p>
+
+                <div class="d-flex gap-2">
+                    <form method="post" class="flex-grow-1">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger w-100">🗑️ Sí, Eliminar</button>
+                    </form>
+                    <a href="{% url 'combate:detail' object.id_combate %}" class="btn btn-secondary">← No, Cancelar</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

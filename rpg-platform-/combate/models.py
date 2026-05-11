@@ -5,7 +5,7 @@ class Campania(models.Model):
     id_campania = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True)
-    fecha_inicio = models.DateTimeField(auto_now_add=True)
+    fecha_inicio = models.DateField(auto_now_add=True)
 
     class Meta:
         db_table = 'campania'

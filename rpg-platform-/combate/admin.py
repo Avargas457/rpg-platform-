@@ -12,6 +12,6 @@ class CombateAdmin(admin.ModelAdmin):
 
 @admin.register(Campania)
 class CampaniaAdmin(admin.ModelAdmin):
-    list_display = ('id_campania', 'nombre', 'fecha_creacion')
+    list_display = ('id_campania', 'nombre', 'fecha_inicio')
     search_fields = ('nombre',)
-    readonly_fields = ('fecha_creacion',)
+    readonly_fields = ('fecha_inicio',)

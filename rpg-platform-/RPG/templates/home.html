@@ -12,7 +12,7 @@
     </div>
     
     <div class="row g-4 mt-5">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body text-center">
                     <h5 class="card-title">🎲 Tiradas de Dado</h5>
@@ -22,12 +22,22 @@
             </div>
         </div>
         
-        <div class="col-md-6">
+        <div class="col-md-4">
             <div class="card h-100">
                 <div class="card-body text-center">
                     <h5 class="card-title">⚔️ Combates</h5>
                     <p class="card-text">Administra tus combates y campañas</p>
                     <a href="{% url 'combate:list' %}" class="btn btn-primary">Ir a Combates</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-danger">
+                <div class="card-body text-center">
+                    <h5 class="card-title">🎲⚔️ Tirada y Combate</h5>
+                    <p class="card-text">Realiza tiradas durante tus combates</p>
+                    <a href="{% url 'combate:tirada_combate_nueva' %}" class="btn btn-danger">Ir a Tirada y Combate</a>
                 </div>
             </div>
         </div>

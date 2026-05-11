@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block title %}Tirada en Combate - RPG Platform{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow-lg">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">⚔️ Tirada en Combate</h4>
+                </div>
+                
+                <div class="card-body">
+                    <div class="alert alert-info" role="alert">
+                        <strong>Combate:</strong> {% if combate.id_campania %}{{ combate.id_campania.nombre }}{% else %}Sin campaña asignada{% endif %}<br>
+                        <strong>Estado:</strong> <span class="badge bg-success">{{ combate.estado }}</span>
+                    </div>
+
+                    <form method="post" class="mt-4">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="id_tipo_dado" class="form-label"><strong>Selecciona el Dado</strong></label>
+                            {{ form.tipo_dado }}
+                            {% if form.tipo_dado.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {{ form.tipo_dado.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_tipo_accion" class="form-label"><strong>Selecciona la Acción</strong></label>
+                            {{ form.tipo_accion }}
+                            {% if form.tipo_accion.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {{ form.tipo_accion.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_descripcion" class="form-label"><strong>Descripción (Opcional)</strong></label>
+                            {{ form.descripcion }}
+                            {% if form.descripcion.errors %}
+                                <div class="alert alert-danger mt-2">
+                                    {{ form.descripcion.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a href="{% url 'combate:detail' combate.id_combate %}" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-danger btn-lg">
+                                🎲 Lanzar Dado
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Información de los Dados -->
+            <div class="card mt-4">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">📊 Información de los Dados</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Tipos de Dados:</h6>
+                            <ul>
+                                <li><strong>d4:</strong> Resulta entre 1-4</li>
+                                <li><strong>d6:</strong> Resulta entre 1-6</li>
+                                <li><strong>d8:</strong> Resulta entre 1-8</li>
+                                <li><strong>d10:</strong> Resulta entre 1-10</li>
+                                <li><strong>d12:</strong> Resulta entre 1-12</li>
+                                <li><strong>d20:</strong> Resulta entre 1-20</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Acciones Disponibles:</h6>
+                            <ul>
+                                <li><strong>Ataque:</strong> Golpear al enemigo</li>
+                                <li><strong>Esquivar:</strong> Evitar daño</li>
+                                <li><strong>Proteger:</strong> Defender a un aliado</li>
+                                <li><strong>Encantar:</strong> Usar magia</li>
+                                <li><strong>Sanar:</strong> Recuperar puntos de vida</li>
+                                <li><strong>Habilidad Especial:</strong> Usar habilidad única</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+    
+    .card-header {
+        border-radius: 10px 10px 0 0;
+        padding: 20px;
+    }
+    
+    .btn-danger:hover {
+        transform: scale(1.05);
+        transition: all 0.3s ease;
+    }
+</style>
+{% endblock %}

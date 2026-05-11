@@ -8,6 +8,7 @@
         <h1 class="mb-0">⚔️ Combate #{{ combate.id_combate }}</h1>
     </div>
     <div class="col-md-6 text-end">
+        <a href="{% url 'combate:tirada' combate.id_combate %}" class="btn btn-success">🎲 Realizar Tirada</a>
         <a href="{% url 'combate:update' combate.id_combate %}" class="btn btn-warning">✏️ Editar</a>
         <a href="{% url 'combate:list' %}" class="btn btn-secondary">← Volver</a>
     </div>
@@ -56,6 +57,21 @@
             <div class="card-body">
                 <p class="mb-3">¿Deseas eliminar este combate?</p>
                 <a href="{% url 'combate:delete' combate.id_combate %}" class="btn btn-danger w-100">🗑️ Eliminar Combate</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Historial de Tiradas -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-info">
+                <h5 class="mb-0">📋 Historial de Tiradas</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Las tiradas realizadas en este combate aparecerán aquí.</p>
+                <p><a href="{% url 'tirada:list' %}" class="btn btn-sm btn-info">Ver todas las tiradas</a></p>
             </div>
         </div>
     </div>

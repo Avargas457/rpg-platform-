@@ -32,25 +32,57 @@
                             <!-- Seleccionar Dado -->
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <label for="id_dado" class="form-label"><strong>🎲 Selecciona el Dado</strong></label>
-                                    <div class="btn-group-vertical w-100" role="group">
-                                        <input type="radio" class="btn-check" name="tipo_dado" id="d4" value="d4" required>
-                                        <label class="btn btn-outline-primary" for="d4">d4 (1-4)</label>
+                                    <label class="form-label"><strong>🎲 Selecciona el Dado</strong></label>
+                                    
+                                    <!-- Grid de dados interactivo -->
+                                    <div class="row g-2 mb-3">
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-dice w-100 h-100 dice-btn-combat" data-dice="d4">
+                                                <div class="dice-icon-combat">△</div>
+                                                <div class="dice-label-combat">D4</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-dice w-100 h-100 dice-btn-combat" data-dice="d6">
+                                                <div class="dice-icon-combat">⬜</div>
+                                                <div class="dice-label-combat">D6</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-dice w-100 h-100 dice-btn-combat" data-dice="d8">
+                                                <div class="dice-icon-combat">◇</div>
+                                                <div class="dice-label-combat">D8</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-dice w-100 h-100 dice-btn-combat" data-dice="d10">
+                                                <div class="dice-icon-combat">⬠</div>
+                                                <div class="dice-label-combat">D10</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-dice w-100 h-100 dice-btn-combat" data-dice="d12">
+                                                <div class="dice-icon-combat">◈</div>
+                                                <div class="dice-label-combat">D12</div>
+                                            </button>
+                                        </div>
+                                        <div class="col-6">
+                                            <button type="button" class="btn btn-dice w-100 h-100 dice-btn-combat" data-dice="d20">
+                                                <div class="dice-icon-combat">⬢</div>
+                                                <div class="dice-label-combat">D20</div>
+                                            </button>
+                                        </div>
+                                    </div>
 
-                                        <input type="radio" class="btn-check" name="tipo_dado" id="d6" value="d6">
-                                        <label class="btn btn-outline-primary" for="d6">d6 (1-6)</label>
+                                    <!-- Campo oculto para el tipo de dado -->
+                                    <input type="hidden" name="tipo_dado" id="tipo_dado_hidden" value="">
+                                    
+                                    <!-- Campo oculto para el resultado -->
+                                    <input type="hidden" name="resultado_tirada" id="resultado_tirada_hidden" value="">
 
-                                        <input type="radio" class="btn-check" name="tipo_dado" id="d8" value="d8">
-                                        <label class="btn btn-outline-primary" for="d8">d8 (1-8)</label>
-
-                                        <input type="radio" class="btn-check" name="tipo_dado" id="d10" value="d10">
-                                        <label class="btn btn-outline-primary" for="d10">d10 (1-10)</label>
-
-                                        <input type="radio" class="btn-check" name="tipo_dado" id="d12" value="d12">
-                                        <label class="btn btn-outline-primary" for="d12">d12 (1-12)</label>
-
-                                        <input type="radio" class="btn-check" name="tipo_dado" id="d20" value="d20">
-                                        <label class="btn btn-outline-primary" for="d20">d20 (1-20) <strong>Clásico</strong></label>
+                                    <!-- Vista previa del dado seleccionado -->
+                                    <div id="dicePreview" class="alert alert-info d-none mb-0">
+                                        <strong id="previewText">Selecciona un dado</strong>
                                     </div>
                                 </div>
                             </div>
@@ -91,11 +123,61 @@
                         <!-- Botones -->
                         <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-5">
                             <a href="{% url 'home' %}" class="btn btn-secondary btn-lg">← Cancelar</a>
-                            <button type="submit" class="btn btn-success btn-lg">
+                            <button type="submit" id="submitBtn" class="btn btn-success btn-lg">
                                 🎲 Lanzar Dado y Guardar
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+
+            <!-- Animación del dado 3D -->
+            <div id="diceAnimationContainer" class="d-none mt-4">
+                <div class="card shadow-lg">
+                    <div class="card-body text-center py-5">
+                        <h4 class="mb-4">Lanzando el dado...</h4>
+                        <div class="dice-3d-container-combat">
+                            <div id="dice3DCombat" class="dice-3d-combat">
+                                <div class="dice-face-combat front">1</div>
+                                <div class="dice-face-combat back">6</div>
+                                <div class="dice-face-combat right">3</div>
+                                <div class="dice-face-combat left">4</div>
+                                <div class="dice-face-combat top">5</div>
+                                <div class="dice-face-combat bottom">2</div>
+                            </div>
+                        </div>
+                        <p class="text-muted mt-3">⏳ Espera mientras se lanza el dado...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resultado de la tirada en combate -->
+            <div id="resultCombateContainer" class="d-none mt-4">
+                <div class="card bg-dark border-primary shadow-lg">
+                    <div class="card-body text-center py-5">
+                        <!-- Resultado con icono del dado -->
+                        <div class="mb-4">
+                            <div class="d-flex align-items-center justify-content-center gap-3 mb-3">
+                                <div id="resultCombateDiceIcon" class="result-dice-icon" style="font-size: 5rem; color: #79c0ff;">
+                                    ⬢
+                                </div>
+                                <h1 id="resultCombateTotal" class="display-2 text-success fw-bold result-animate mb-0">
+                                    20
+                                </h1>
+                            </div>
+                            <p class="text-muted"><span id="resultCombateDice" class="text-primary">D20</span> - Resultado de <strong id="resultCombateAccion">Ataque</strong></p>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                            <button id="confirmCombateBtn" class="btn btn-success btn-lg">
+                                <i class="fas fa-check"></i> Confirmar y Guardar
+                            </button>
+                            <button id="newCombateRollBtn" class="btn btn-secondary btn-lg">
+                                <i class="fas fa-redo"></i> Nueva tirada
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -127,5 +209,393 @@
         font-weight: bold;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     }
+
+    /* Estilos para los dados interactivos */
+    .btn-dice {
+        border: 2px solid #30363d;
+        background-color: #0d1117;
+        color: #e0e0e0;
+        padding: 15px 10px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 90px;
+    }
+
+    .btn-dice:hover {
+        border-color: #58a6ff;
+        color: #58a6ff;
+        transform: translateY(-3px);
+        box-shadow: 0 0 15px rgba(88, 166, 255, 0.3);
+    }
+
+    .btn-dice.active {
+        border-color: #238636;
+        background-color: rgba(35, 134, 54, 0.2);
+        color: #4ade80;
+        box-shadow: 0 0 25px rgba(35, 134, 54, 0.5);
+        transform: scale(1.05);
+    }
+
+    /* Colores específicos para cada dado */
+    .btn-dice[data-dice="d4"] {
+        color: #d4844a;
+        border-color: #d4844a;
+    }
+    .btn-dice[data-dice="d4"]:hover {
+        border-color: #d4844a;
+        color: #d4844a;
+        box-shadow: 0 0 15px rgba(212, 132, 74, 0.5);
+    }
+
+    .btn-dice[data-dice="d6"] {
+        color: #58a6ff;
+        border-color: #58a6ff;
+    }
+    .btn-dice[data-dice="d6"]:hover {
+        border-color: #58a6ff;
+        color: #58a6ff;
+        box-shadow: 0 0 15px rgba(88, 166, 255, 0.5);
+    }
+
+    .btn-dice[data-dice="d8"] {
+        color: #a371f7;
+        border-color: #a371f7;
+    }
+    .btn-dice[data-dice="d8"]:hover {
+        border-color: #a371f7;
+        color: #a371f7;
+        box-shadow: 0 0 15px rgba(163, 113, 247, 0.5);
+    }
+
+    .btn-dice[data-dice="d10"] {
+        color: #3fb950;
+        border-color: #3fb950;
+    }
+    .btn-dice[data-dice="d10"]:hover {
+        border-color: #3fb950;
+        color: #3fb950;
+        box-shadow: 0 0 15px rgba(63, 185, 80, 0.5);
+    }
+
+    .btn-dice[data-dice="d12"] {
+        color: #f85149;
+        border-color: #f85149;
+    }
+    .btn-dice[data-dice="d12"]:hover {
+        border-color: #f85149;
+        color: #f85149;
+        box-shadow: 0 0 15px rgba(248, 81, 73, 0.5);
+    }
+
+    .btn-dice[data-dice="d20"] {
+        color: #79c0ff;
+        border-color: #79c0ff;
+    }
+    .btn-dice[data-dice="d20"]:hover {
+        border-color: #79c0ff;
+        color: #79c0ff;
+        box-shadow: 0 0 15px rgba(121, 192, 255, 0.5);
+    }
+
+    .dice-icon-combat {
+        font-size: 2rem;
+        margin-bottom: 8px;
+    }
+
+    .dice-label-combat {
+        font-size: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    #dicePreview {
+        background-color: rgba(13, 110, 253, 0.1);
+        border: 1px solid #0d6efd;
+        color: #0d6efd;
+        padding: 12px;
+        border-radius: 4px;
+    }
+
+    #previewText {
+        font-size: 1.1rem;
+    }
+
+    /* Animación 3D del dado para combate */
+    .dice-3d-container-combat {
+        perspective: 1000px;
+        height: 250px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px auto;
+    }
+
+    .dice-3d-combat {
+        position: relative;
+        width: 150px;
+        height: 150px;
+        transform-style: preserve-3d;
+        animation: spinDiceCombat 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    .dice-face-combat {
+        position: absolute;
+        width: 150px;
+        height: 150px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 4rem;
+        font-weight: bold;
+        border: 3px solid #238636;
+        background-color: rgba(35, 134, 54, 0.1);
+        opacity: 0.9;
+    }
+
+    .dice-face-combat.front {
+        transform: rotateY(0deg) translateZ(75px);
+        background-color: rgba(76, 175, 80, 0.2);
+    }
+
+    .dice-face-combat.back {
+        transform: rotateY(180deg) translateZ(75px);
+        background-color: rgba(76, 175, 80, 0.2);
+    }
+
+    .dice-face-combat.right {
+        transform: rotateY(90deg) translateZ(75px);
+        background-color: rgba(76, 175, 80, 0.2);
+    }
+
+    .dice-face-combat.left {
+        transform: rotateY(-90deg) translateZ(75px);
+        background-color: rgba(76, 175, 80, 0.2);
+    }
+
+    .dice-face-combat.top {
+        transform: rotateX(90deg) translateZ(75px);
+        background-color: rgba(76, 175, 80, 0.2);
+    }
+
+    .dice-face-combat.bottom {
+        transform: rotateX(-90deg) translateZ(75px);
+        background-color: rgba(76, 175, 80, 0.2);
+    }
+
+    @keyframes spinDiceCombat {
+        0% {
+            transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+        }
+        100% {
+            transform: rotateX(720deg) rotateY(720deg) rotateZ(360deg);
+        }
+    }
 </style>
+
+<script>
+    const diceTypesCombat = {
+        'd4': 4,
+        'd6': 6,
+        'd8': 8,
+        'd10': 10,
+        'd12': 12,
+        'd20': 20
+    };
+
+    let selectedDiceCombat = null;
+    let currentCombateResult = null;
+
+    // Seleccionar dado
+    document.querySelectorAll('.dice-btn-combat').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remover clase active de todos los botones
+            document.querySelectorAll('.dice-btn-combat').forEach(b => b.classList.remove('active'));
+            
+            // Agregar clase active al botón clickeado
+            this.classList.add('active');
+            selectedDiceCombat = this.dataset.dice;
+            
+            // Guardar en el campo oculto
+            document.getElementById('tipo_dado_hidden').value = selectedDiceCombat;
+            
+            // Mostrar preview
+            const diceLabel = selectedDiceCombat.toUpperCase();
+            const maxValue = diceTypesCombat[selectedDiceCombat];
+            document.getElementById('dicePreview').classList.remove('d-none');
+            document.getElementById('previewText').textContent = `✓ ${diceLabel} (1-${maxValue}) seleccionado`;
+        });
+    });
+
+    // Validar que se seleccione un dado antes de enviar el formulario
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (!selectedDiceCombat) {
+            e.preventDefault();
+            alert('Por favor, selecciona un dado antes de continuar');
+            return;
+        }
+
+        // Validar que se seleccione una acción
+        const selectedAction = document.querySelector('input[name="tipo_accion"]:checked');
+        if (!selectedAction) {
+            e.preventDefault();
+            alert('Por favor, selecciona una acción antes de continuar');
+            return;
+        }
+        
+        // Mostrar animación del dado
+        e.preventDefault();
+        document.getElementById('diceAnimationContainer').classList.remove('d-none');
+        
+        // Scroll a la animación
+        document.getElementById('diceAnimationContainer').scrollIntoView({ behavior: 'smooth' });
+        
+        // Después de que termine la animación, lanzar el dado
+        setTimeout(() => {
+            rollDiceCombate(selectedAction);
+        }, 1200);
+    });
+
+    // Función para lanzar el dado en combate
+    function rollDiceCombate(selectedAction) {
+        const diceTypesCombatRoll = {
+            'd4': 4,
+            'd6': 6,
+            'd8': 8,
+            'd10': 10,
+            'd12': 12,
+            'd20': 20
+        };
+
+        // Generar resultado aleatorio
+        const result = Math.floor(Math.random() * diceTypesCombatRoll[selectedDiceCombat]) + 1;
+
+        // Mostrar resultado
+        displayCombateResult(result, selectedAction);
+    }
+
+    // Mostrar resultado del combate
+    function displayCombateResult(result, selectedAction) {
+        const diceIcons = {
+            'd4': '△',
+            'd6': '⬜',
+            'd8': '◇',
+            'd10': '⬠',
+            'd12': '◈',
+            'd20': '⬢'
+        };
+
+        const diceClasses = {
+            'd4': 'd4-icon',
+            'd6': 'd6-icon',
+            'd8': 'd8-icon',
+            'd10': 'd10-icon',
+            'd12': 'd12-icon',
+            'd20': 'd20-icon'
+        };
+
+        // Guardar el resultado actual
+        currentCombateResult = {
+            dice: selectedDiceCombat,
+            result: result,
+            action: selectedAction.value
+        };
+
+        // Guardar en campo oculto
+        document.getElementById('resultado_tirada_hidden').value = result;
+
+        // Actualizar el ícono del dado
+        const diceIcon = document.getElementById('resultCombateDiceIcon');
+        diceIcon.textContent = diceIcons[selectedDiceCombat];
+        diceIcon.className = `result-dice-icon ${diceClasses[selectedDiceCombat]}`;
+
+        // Actualizar label del dado
+        document.getElementById('resultCombateDice').textContent = selectedDiceCombat.toUpperCase();
+
+        // Actualizar resultado total
+        document.getElementById('resultCombateTotal').textContent = result;
+
+        // Actualizar acción mostrada
+        const actionValue = selectedAction.value;
+        const actionLabels = {
+            'ataque': 'Ataque',
+            'esquivar': 'Esquivar',
+            'proteger': 'Proteger',
+            'encantar': 'Encantar',
+            'sanar': 'Sanar',
+            'habilidad_especial': 'Habilidad Especial'
+        };
+        document.getElementById('resultCombateAccion').textContent = actionLabels[actionValue];
+
+        // Ocultar animación y mostrar resultado
+        document.getElementById('diceAnimationContainer').classList.add('d-none');
+        document.getElementById('resultCombateContainer').classList.remove('d-none');
+
+        // Scroll al resultado
+        document.getElementById('resultCombateContainer').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Confirmar y guardar resultado del combate
+    document.addEventListener('click', function(e) {
+        if (e.target.id === 'confirmCombateBtn') {
+            // Primero guardar la tirada en el historial
+            saveCombateTirada();
+            
+            // Luego enviar el formulario
+            setTimeout(() => {
+                document.querySelector('form').submit();
+            }, 500);
+        }
+    });
+
+    // Guardar tirada de combate en el historial
+    function saveCombateTirada() {
+        if (!currentCombateResult) return;
+
+        fetch("{% url 'tirada:roll_ajax' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `dice_type=${currentCombateResult.dice}&quantity=1`
+        })
+        .then(response => response.json())
+        .catch(error => console.error('Error guardando tirada:', error));
+    }
+
+    // CSRF token helper
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Nueva tirada en combate
+    document.addEventListener('click', function(e) {
+        if (e.target.id === 'newCombateRollBtn') {
+            document.getElementById('resultCombateContainer').classList.add('d-none');
+            document.querySelectorAll('.dice-btn-combat').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('input[name="tipo_accion"]').forEach(r => r.checked = false);
+            document.getElementById('tipo_dado_hidden').value = '';
+            document.getElementById('dicePreview').classList.add('d-none');
+            selectedDiceCombat = null;
+        }
+    });
+</script>
 {% endblock %}

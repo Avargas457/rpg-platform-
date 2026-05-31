@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}🎲 Nueva Tirada de Dado - RPG Platform{% endblock %}
+{% block title %}Lanzador de Dados - RPG Platform{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -84,36 +84,20 @@
     <div id="resultContainer" class="d-none mt-5">
         <div class="row">
             <div class="col-lg-8 mx-auto">
-                <!-- Animación del dado rotando -->
-                <div id="diceAnimation" class="d-none mb-4">
-                    <div class="text-center">
-                        <div class="dice-3d-container">
-                            <div id="dice3D" class="dice-3d">
-                                <div class="dice-face front">1</div>
-                                <div class="dice-face back">6</div>
-                                <div class="dice-face right">3</div>
-                                <div class="dice-face left">4</div>
-                                <div class="dice-face top">5</div>
-                                <div class="dice-face bottom">2</div>
-                            </div>
-                        </div>
-                        <p class="text-muted mt-3">Lanzando...</p>
-                    </div>
-                </div>
-
                 <div class="card bg-dark border-primary shadow-lg">
                     <div class="card-body text-center py-5">
-                        <!-- Resultado con icono del dado -->
+                        <!-- Dado seleccionado -->
                         <div class="mb-4">
-                            <div class="d-flex align-items-center justify-content-center gap-3 mb-3">
-                                <div id="resultDiceIcon" class="result-dice-icon" style="font-size: 5rem; color: #79c0ff;">
-                                    ⬢
-                                </div>
-                                <h1 id="totalResult" class="display-2 text-success fw-bold result-animate mb-0">
-                                    20
-                                </h1>
-                            </div>
-                            <p class="text-muted"><span id="selectedDice" class="text-primary">D20</span> - Resultado</p>
+                            <h2 id="selectedDice" class="text-primary mb-2">D20</h2>
+                            <p class="text-muted">Tipo de dado</p>
+                        </div>
+
+                        <!-- Resultado animado -->
+                        <div class="mb-4">
+                            <h1 id="totalResult" class="display-2 text-success fw-bold result-animate">
+                                20
+                            </h1>
+                            <p class="text-muted">Resultado total</p>
                         </div>
 
                         <!-- Detalles de tiradas individuales -->
@@ -214,67 +198,6 @@
         box-shadow: 0 0 30px rgba(35, 134, 54, 0.5);
     }
 
-    /* Colores específicos para cada dado */
-    .btn-dice[data-dice="d4"] {
-        color: #d4844a;
-        border-color: #d4844a;
-    }
-    .btn-dice[data-dice="d4"]:hover {
-        border-color: #d4844a;
-        color: #d4844a;
-        box-shadow: 0 0 20px rgba(212, 132, 74, 0.5);
-    }
-
-    .btn-dice[data-dice="d6"] {
-        color: #58a6ff;
-        border-color: #58a6ff;
-    }
-    .btn-dice[data-dice="d6"]:hover {
-        border-color: #58a6ff;
-        color: #58a6ff;
-        box-shadow: 0 0 20px rgba(88, 166, 255, 0.5);
-    }
-
-    .btn-dice[data-dice="d8"] {
-        color: #a371f7;
-        border-color: #a371f7;
-    }
-    .btn-dice[data-dice="d8"]:hover {
-        border-color: #a371f7;
-        color: #a371f7;
-        box-shadow: 0 0 20px rgba(163, 113, 247, 0.5);
-    }
-
-    .btn-dice[data-dice="d10"] {
-        color: #3fb950;
-        border-color: #3fb950;
-    }
-    .btn-dice[data-dice="d10"]:hover {
-        border-color: #3fb950;
-        color: #3fb950;
-        box-shadow: 0 0 20px rgba(63, 185, 80, 0.5);
-    }
-
-    .btn-dice[data-dice="d12"] {
-        color: #f85149;
-        border-color: #f85149;
-    }
-    .btn-dice[data-dice="d12"]:hover {
-        border-color: #f85149;
-        color: #f85149;
-        box-shadow: 0 0 20px rgba(248, 81, 73, 0.5);
-    }
-
-    .btn-dice[data-dice="d20"] {
-        color: #79c0ff;
-        border-color: #79c0ff;
-    }
-    .btn-dice[data-dice="d20"]:hover {
-        border-color: #79c0ff;
-        color: #79c0ff;
-        box-shadow: 0 0 20px rgba(121, 192, 255, 0.5);
-    }
-
     .dice-icon {
         font-size: 3rem;
         margin-bottom: 10px;
@@ -291,19 +214,6 @@
     .result-animate {
         animation: popIn 0.6s ease-out, glow 1.5s ease-in-out infinite;
     }
-
-    .result-dice-icon {
-        animation: popIn 0.6s ease-out;
-        display: inline-block;
-    }
-
-    /* Colores del icono del resultado según el dado */
-    .result-dice-icon.d4-icon { color: #d4844a !important; }
-    .result-dice-icon.d6-icon { color: #58a6ff !important; }
-    .result-dice-icon.d8-icon { color: #a371f7 !important; }
-    .result-dice-icon.d10-icon { color: #3fb950 !important; }
-    .result-dice-icon.d12-icon { color: #f85149 !important; }
-    .result-dice-icon.d20-icon { color: #79c0ff !important; }
 
     .roll-badge {
         display: inline-block;
@@ -340,77 +250,6 @@
         pointer-events: none;
     }
 
-    /* Animación 3D del dado */
-    .dice-3d-container {
-        perspective: 1000px;
-        height: 200px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 20px auto;
-    }
-
-    .dice-3d {
-        position: relative;
-        width: 150px;
-        height: 150px;
-        transform-style: preserve-3d;
-        animation: spinDice 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
-    }
-
-    .dice-face {
-        position: absolute;
-        width: 150px;
-        height: 150px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 4rem;
-        font-weight: bold;
-        border: 3px solid #238636;
-        background-color: rgba(35, 134, 54, 0.1);
-        opacity: 0.9;
-    }
-
-    .dice-face.front {
-        transform: rotateY(0deg) translateZ(75px);
-        background-color: rgba(76, 175, 80, 0.2);
-    }
-
-    .dice-face.back {
-        transform: rotateY(180deg) translateZ(75px);
-        background-color: rgba(76, 175, 80, 0.2);
-    }
-
-    .dice-face.right {
-        transform: rotateY(90deg) translateZ(75px);
-        background-color: rgba(76, 175, 80, 0.2);
-    }
-
-    .dice-face.left {
-        transform: rotateY(-90deg) translateZ(75px);
-        background-color: rgba(76, 175, 80, 0.2);
-    }
-
-    .dice-face.top {
-        transform: rotateX(90deg) translateZ(75px);
-        background-color: rgba(76, 175, 80, 0.2);
-    }
-
-    .dice-face.bottom {
-        transform: rotateX(-90deg) translateZ(75px);
-        background-color: rgba(76, 175, 80, 0.2);
-    }
-
-    @keyframes spinDice {
-        0% {
-            transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
-        }
-        100% {
-            transform: rotateX(720deg) rotateY(720deg) rotateZ(360deg);
-        }
-    }
-
     /* Responsive */
     @media (max-width: 576px) {
         .display-2 {
@@ -422,18 +261,6 @@
         .btn-dice {
             min-height: 100px;
             padding: 15px 8px;
-        }
-        .dice-3d-container {
-            height: 150px;
-        }
-        .dice-3d {
-            width: 100px;
-            height: 100px;
-        }
-        .dice-face {
-            width: 100px;
-            height: 100px;
-            font-size: 2.5rem;
         }
     }
 </style>
@@ -484,15 +311,6 @@
     function rollDice() {
         const quantity = parseInt(document.getElementById('diceQuantity').value);
         
-        // Mostrar contenedor de resultado
-        document.getElementById('resultContainer').classList.remove('d-none');
-        
-        // Mostrar animación del dado
-        document.getElementById('diceAnimation').classList.remove('d-none');
-        
-        // Scroll al resultado
-        document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
-        
         fetch("{% url 'tirada:roll_ajax' %}", {
             method: 'POST',
             headers: {
@@ -503,16 +321,8 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                // Esperar a que termine la animación del dado
-                setTimeout(() => {
-                    currentResult = data;
-                    displayResult(data);
-                    document.getElementById('diceAnimation').classList.add('d-none');
-                }, 1200);
-            } else {
-                alert('Error al lanzar los dados');
-            }
+            currentResult = data;
+            displayResult(data);
         })
         .catch(error => {
             console.error('Error:', error);
@@ -522,33 +332,7 @@
 
     // Mostrar resultado
     function displayResult(data) {
-        const diceIcons = {
-            'd4': '△',
-            'd6': '⬜',
-            'd8': '◇',
-            'd10': '⬠',
-            'd12': '◈',
-            'd20': '⬢'
-        };
-
-        const diceClasses = {
-            'd4': 'd4-icon',
-            'd6': 'd6-icon',
-            'd8': 'd8-icon',
-            'd10': 'd10-icon',
-            'd12': 'd12-icon',
-            'd20': 'd20-icon'
-        };
-
-        // Actualizar el ícono del dado
-        const diceIcon = document.getElementById('resultDiceIcon');
-        diceIcon.textContent = diceIcons[selectedDice];
-        diceIcon.className = `result-dice-icon ${diceClasses[selectedDice]}`;
-
-        // Actualizar label del dado
         document.getElementById('selectedDice').textContent = selectedDice.toUpperCase();
-
-        // Actualizar resultado total
         document.getElementById('totalResult').textContent = data.total;
         
         // Mostrar resultados individuales
@@ -561,19 +345,39 @@
             badge.textContent = result;
             resultsList.appendChild(badge);
         });
+
+        // Mostrar contenedor de resultado
+        document.getElementById('resultContainer').classList.remove('d-none');
+        
+        // Scroll al resultado
+        document.getElementById('resultContainer').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // Guardar tirada - simplemente redireccionar ya que ya está guardada
+    // Guardar tirada
     document.getElementById('saveRollBtn').addEventListener('click', function() {
-        alert('✓ Tirada guardada exitosamente en el historial');
-        // Redirigir al listado
-        window.location.href = "{% url 'tirada:list' %}";
+        const quantity = parseInt(document.getElementById('diceQuantity').value);
+        
+        fetch("{% url 'tirada:roller' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken'),
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `dice_type=${selectedDice}&quantity=${quantity}`
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('✓ Tirada guardada exitosamente');
+                // Limpiar resultado
+                document.getElementById('resultContainer').classList.add('d-none');
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
 
     // Nueva tirada
     document.getElementById('newRollBtn').addEventListener('click', function() {
         document.getElementById('resultContainer').classList.add('d-none');
-        document.getElementById('diceAnimation').classList.add('d-none');
         document.querySelectorAll('.dice-btn').forEach(b => b.classList.remove('active'));
         document.getElementById('diceQuantity').value = 1;
         document.getElementById('rollBtn').disabled = true;
